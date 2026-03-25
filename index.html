@@ -21,14 +21,12 @@
   }
   .container { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:40px 24px 80px; }
 
-  /* HEADER */
   header { margin-bottom:48px; border-bottom:1px solid var(--border); padding-bottom:32px; }
   .eyebrow { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
   h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,58px); font-weight:300; line-height:1.05; letter-spacing:-0.02em; }
   h1 em { font-style:italic; color:var(--gold); }
-  .subtitle { margin-top:12px; font-size:11px; color:var(--text-dim); letter-spacing:0.04em; line-height:1.75; max-width:580px; }
+  .subtitle { margin-top:12px; font-size:11px; color:var(--text-dim); letter-spacing:0.04em; line-height:1.75; max-width:640px; }
 
-  /* CONTROLS */
   .controls-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; margin-bottom:40px; }
   .control-card { background:var(--ink-mid); border:1px solid var(--border); padding:20px; position:relative; }
   .control-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,var(--gold),transparent); }
@@ -39,7 +37,6 @@
   input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--gold); cursor:pointer; box-shadow:0 0 10px rgba(201,168,76,0.35); }
   input[type=range]::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:var(--gold); cursor:pointer; border:none; }
 
-  /* SCENARIO TOGGLES */
   .scenario-bar { display:flex; gap:10px; margin-bottom:32px; flex-wrap:wrap; align-items:center; }
   .scenario-label { font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--text-dim); margin-right:4px; }
   .toggle-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; padding:7px 14px; border:1px solid; cursor:pointer; transition:all 0.2s; background:transparent; text-transform:uppercase; }
@@ -52,8 +49,13 @@
   .toggle-btn.stress { border-color:var(--blue); color:var(--blue); }
   .toggle-btn.stress.active { background:var(--blue); color:var(--ink); }
 
-  /* RESULT CARDS */
-  .result-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px; background:var(--border); margin-bottom:40px; }
+  .starting-callout { background:var(--ink-mid); border:1px solid var(--border); border-left:3px solid var(--gold); padding:20px 24px; margin-bottom:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .starting-callout-label { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+  .starting-callout-value { font-family:'Cormorant Garamond',serif; font-size:clamp(28px,4vw,42px); font-weight:400; color:var(--cream); letter-spacing:-0.02em; }
+  .starting-callout-sub { font-size:10px; color:var(--text-dim); line-height:1.7; }
+  .starting-callout-note { font-size:9px; color:var(--text-mid); max-width:360px; line-height:1.7; }
+
+  .result-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1px; background:var(--border); margin-bottom:40px; }
   .result-card { background:var(--ink-mid); padding:22px 18px; position:relative; overflow:hidden; }
   .result-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
   .result-card.optimistic::after { background:var(--green); }
@@ -65,7 +67,7 @@
   .result-card.base .sc-name { color:var(--gold); }
   .result-card.pessimistic .sc-name { color:var(--red); }
   .result-card.stress .sc-name { color:var(--blue); }
-  .result-card .port-req { font-family:'Cormorant Garamond',serif; font-size:clamp(20px,2.8vw,30px); font-weight:500; color:var(--cream); letter-spacing:-0.02em; margin-bottom:3px; }
+  .result-card .port-req { font-family:'Cormorant Garamond',serif; font-size:clamp(18px,2.5vw,26px); font-weight:500; letter-spacing:-0.02em; margin-bottom:3px; }
   .result-card .sub-det { font-size:9px; color:var(--text-dim); line-height:1.65; }
   .pill { display:inline-block; font-size:8px; padding:2px 7px; letter-spacing:0.1em; margin-top:8px; margin-right:3px; }
   .pill-gold { background:var(--gold-dim); color:var(--gold); }
@@ -73,17 +75,15 @@
   .pill-red { background:rgba(207,102,121,0.15); color:var(--red); }
   .pill-blue { background:rgba(106,159,191,0.15); color:var(--blue); }
 
-  /* DEPLETION SUMMARY BAR */
   .depletion-bar { background:var(--ink-mid); border:1px solid var(--border); border-left:3px solid var(--gold); padding:20px 24px; margin-bottom:40px; }
   .depletion-bar-title { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
   .depletion-tracks { display:flex; flex-direction:column; gap:10px; }
   .dep-track { display:flex; align-items:center; gap:12px; }
   .dep-track-label { font-size:9px; letter-spacing:0.1em; text-transform:uppercase; min-width:88px; }
-  .dep-track-bar-wrap { flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:0; position:relative; overflow:hidden; }
-  .dep-track-bar-fill { height:100%; border-radius:0; transition:width 0.5s ease; }
-  .dep-track-stat { font-size:10px; min-width:110px; text-align:right; letter-spacing:0.05em; }
+  .dep-track-bar-wrap { flex:1; height:6px; background:rgba(255,255,255,0.06); position:relative; overflow:hidden; }
+  .dep-track-bar-fill { height:100%; transition:width 0.5s ease; }
+  .dep-track-stat { font-size:10px; min-width:130px; text-align:right; letter-spacing:0.05em; }
 
-  /* CHARTS */
   .chart-section { margin-bottom:40px; }
   .chart-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
   .section-title { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:400; color:var(--cream); letter-spacing:-0.01em; }
@@ -91,9 +91,8 @@
   .chart-wrap { background:var(--ink-mid); border:1px solid var(--border); padding:24px; }
   .chart-wrap canvas { max-height:400px; }
 
-  /* TABLE */
   .table-wrap { background:var(--ink-mid); border:1px solid var(--border); overflow:hidden; margin-bottom:40px; overflow-x:auto; }
-  table { width:100%; border-collapse:collapse; min-width:680px; }
+  table { width:100%; border-collapse:collapse; min-width:760px; }
   thead { background:var(--ink-light); }
   th { font-size:8px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); padding:13px 14px; text-align:left; border-bottom:1px solid var(--border); }
   td { font-size:11px; padding:11px 14px; border-bottom:1px solid rgba(201,168,76,0.07); color:var(--text-mid); }
@@ -102,7 +101,6 @@
   td.hl { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:500; color:var(--cream); }
   td.green { color:var(--green); } td.red { color:var(--red); } td.gold { color:var(--gold); } td.blue { color:var(--blue); }
 
-  /* FACTORS */
   .factors-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--border); margin-bottom:40px; }
   .factor-card { background:var(--ink-mid); padding:18px 16px; }
   .factor-icon { font-size:18px; margin-bottom:8px; }
@@ -118,8 +116,8 @@
 
   <header>
     <div class="eyebrow">Portfolio Freedom Calculator &middot; 2026</div>
-    <h1>Capital required to generate<br><em>$50,000/month</em> indefinitely</h1>
-    <p class="subtitle">Four inflation scenarios, full 50-year survivability projection, and depletion timelines. Sliders adjust all scenarios simultaneously. All figures in today's purchasing power.</p>
+    <h1>Perpetual income of<br><em>$50,000/month</em></h1>
+    <p class="subtitle">The portfolio is sized to sustain your target income forever at base-case inflation. Optimistic conditions build surplus. Pessimistic and stress conditions erode it. The return slider is the tipping-point dial &mdash; drag it and watch scenarios cross from perpetual to depleting.</p>
   </header>
 
   <div class="controls-grid">
@@ -153,140 +151,197 @@
     <button class="toggle-btn stress active" onclick="toggleScenario('stress',this)">Stress Test</button>
   </div>
 
+  <div class="starting-callout">
+    <div>
+      <div class="starting-callout-label">Starting Portfolio &mdash; Sized for Base-Case Perpetuity</div>
+      <div class="starting-callout-value" id="startingValue"></div>
+      <div class="starting-callout-sub" id="startingSub"></div>
+    </div>
+    <div class="starting-callout-note" id="startingNote">Sized so base-case withdrawals (growing at 4.30%/yr) never exhaust the principal. Optimistic conditions build wealth. Worse-than-base conditions deplete it.</div>
+  </div>
+
   <div class="result-grid" id="resultGrid"></div>
 
-  <!-- DEPLETION SUMMARY BAR -->
   <div class="depletion-bar">
-    <div class="depletion-bar-title">Portfolio Survivability &mdash; Years until depletion at current settings</div>
+    <div class="depletion-bar-title">Survivability &mdash; 50-year horizon at current settings</div>
     <div class="depletion-tracks" id="depletionTracks"></div>
   </div>
 
-  <!-- SURVIVABILITY CHART -->
   <div class="chart-section">
     <div class="chart-header">
       <div class="section-title">Portfolio Balance Over 50 Years</div>
-      <div class="chart-note">Clips to zero at depletion &middot; Dashed line = break-even floor</div>
+      <div class="chart-note">Same starting point &middot; scenarios diverge based on inflation</div>
     </div>
     <div class="chart-wrap"><canvas id="survivalChart"></canvas></div>
   </div>
 
-  <!-- REQUIREMENT BY TARGET CHART -->
   <div class="chart-section">
     <div class="chart-header">
-      <div class="section-title">Required Capital by Monthly Target</div>
-      <div class="chart-note">All active scenarios &middot; Sliders update in real time</div>
+      <div class="section-title">Annual Withdrawal Growth Over 30 Years</div>
+      <div class="chart-note">Gross annual draw needed to maintain real purchasing power</div>
     </div>
-    <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+    <div class="chart-wrap"><canvas id="withdrawalChart"></canvas></div>
   </div>
 
-  <!-- EROSION CHART -->
   <div class="chart-section">
     <div class="chart-header">
       <div class="section-title">Purchasing Power Erosion Over 30 Years</div>
-      <div class="chart-note">Nominal dollars needed to match today's real spending power</div>
+      <div class="chart-note">Monthly nominal dollars needed to match today's spending power</div>
     </div>
     <div class="chart-wrap"><canvas id="erosionChart"></canvas></div>
   </div>
 
-  <div class="section-title" style="margin-bottom:16px;">Detailed Assumptions</div>
+  <div class="section-title" style="margin-bottom:16px;">Scenario Detail</div>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Scenario</th><th>CPI</th><th>Healthcare</th><th>Real Return</th>
-          <th>Implied WR</th><th>Portfolio Required</th><th>Annual Draw</th><th>Depletes</th>
+          <th>Scenario</th><th>CPI</th><th>Total Inflation</th><th>Real Return</th>
+          <th>Initial WR</th><th>Starting Portfolio</th><th>Yr-1 Draw</th><th>Yr-10 Draw</th><th>Outcome</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
 
-  <div class="section-title" style="margin-bottom:16px;">Factors Incorporated</div>
+  <div class="section-title" style="margin-bottom:16px;">How This Works</div>
   <div class="factors-grid">
-    <div class="factor-card"><div class="factor-icon">📈</div><div class="factor-title">CPI Inflation</div><div class="factor-body">Optimistic 2% · Base 3% · Pessimistic 4.5% · Stress 6.5%. Post-pandemic structurally elevated baseline assumed in the base case.</div></div>
-    <div class="factor-card"><div class="factor-icon">🏥</div><div class="factor-title">Healthcare Costs</div><div class="factor-body">Medical inflation historically runs 1.5–2× CPI. Premium coverage for high-income households modeled at 5–9% annual increases. Weighted at 15% of total spend.</div></div>
-    <div class="factor-card"><div class="factor-icon">💸</div><div class="factor-title">Tax Drag</div><div class="factor-body">LTCG + NIIT federal rate of 23.8% on distributions. No Texas state income tax. Adjustable via slider for different portfolio structures.</div></div>
-    <div class="factor-card"><div class="factor-icon">📉</div><div class="factor-title">Sequence Risk</div><div class="factor-body">Early bear markets permanently impair a withdrawal portfolio. The buffer slider adds capital above the perpetuity floor to absorb a bad opening sequence.</div></div>
-    <div class="factor-card"><div class="factor-icon">🏠</div><div class="factor-title">Lifestyle Creep</div><div class="factor-body">High-income households increase real spending 0.5–2%/yr beyond CPI. Modeled as a separately capitalized addon — not hidden in the discount rate where it double-counts.</div></div>
-    <div class="factor-card"><div class="factor-icon">🏦</div><div class="factor-title">Withdrawal Framework</div><div class="factor-body">Classic 4% rule targets a 30-year horizon. True endowment-style preservation requires 2.5–3.5% real. Each scenario uses whichever approach applies given the real return.</div></div>
-    <div class="factor-card"><div class="factor-icon">♾️</div><div class="factor-title">Perpetual vs. Finite</div><div class="factor-body">When after-tax real return exceeds inflation, a perpetuity is used — principal preserved forever. Below that threshold, a finite-horizon growing annuity is used instead.</div></div>
-    <div class="factor-card"><div class="factor-icon">⚠️</div><div class="factor-title">Stagflation Stress</div><div class="factor-body">Stress scenario = 1970s analog: 6.5% sustained CPI, aggressive healthcare cost growth, 2%/yr lifestyle expansion. Designed as the worst-case survival test.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x267E;&#xFE0F;</div><div class="factor-title">Perpetuity Sizing</div><div class="factor-body">Portfolio = gross annual draw &divide; (net return &minus; base inflation). This is the capital that sustains growing withdrawals forever under base-case assumptions. When the spread is too thin, a 40-year growing annuity is used instead.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x1F3AF;</div><div class="factor-title">Base = Perpetual by Design</div><div class="factor-body">The base case is what the portfolio was sized for. It should never deplete at your chosen return. If it does, the return is too low to support the income target indefinitely at 3% CPI + 1% lifestyle creep.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x1F39A;&#xFE0F;</div><div class="factor-title">Return = Tipping-Point Dial</div><div class="factor-body">Drag the return slider and watch scenarios cross from perpetual to depleting. The spread between net return and each scenario's inflation rate determines whether the portfolio survives. This is the most important slider.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x1F4C9;</div><div class="factor-title">Sequence Risk Buffer</div><div class="factor-body">Adds capital above the perpetuity floor. A 10% buffer means 10% more than the theoretical minimum, lowering the initial withdrawal rate. Extra runway if markets start badly.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x1F3E5;</div><div class="factor-title">Healthcare Costs</div><div class="factor-body">Medical inflation weighted at 15% of total spending. Runs 1.5&ndash;2&times; CPI historically. The pessimistic and stress scenarios assume healthcare cost acceleration that compounds above CPI.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x1F3E0;</div><div class="factor-title">Lifestyle Creep</div><div class="factor-body">0.5%/yr optimistic to 2%/yr stress. Baked into total inflation. Even 1%/yr lifestyle creep roughly doubles your required withdrawal over 70 years. The compounding is what kills portfolios.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x1F4D0;</div><div class="factor-title">Income Invariance</div><div class="factor-body">Depletion years do not change with income level. $100K/mo needs exactly 2&times; the portfolio of $50K/mo with identical trajectory. Only return, tax, inflation, and buffer shift timing.</div></div>
+    <div class="factor-card"><div class="factor-icon">&#x26A0;&#xFE0F;</div><div class="factor-title">Stress = 1970s Analog</div><div class="factor-body">6.5% sustained CPI, aggressive healthcare growth, 2%/yr lifestyle expansion. At default 7% return, only stress depletes. Drop the return slider to 5% and watch even the base case break.</div></div>
   </div>
 
   <p class="disclaimer">For illustrative and educational purposes only. Not financial, legal, or investment advice. Past returns do not guarantee future results. Individual tax situations vary. Consult a qualified financial planner, CPA, and estate attorney before major capital decisions.</p>
-
 </div>
 
 <script>
+// ══════════════════════════════════════════════════════════════════════
+// PORTFOLIO FREEDOM CALCULATOR — v4
+//
+// Model: Perpetuity sizing at base-case inflation, four diverging futures.
+//
+// The portfolio is sized using a growing perpetuity formula:
+//   PV = annualGross / (netReturn - baseTotalInflation)
+// This produces the capital needed to sustain income forever if
+// base-case inflation plays out. Buffer adds cushion on top.
+//
+// Then four scenarios simulate 50 years from that starting point.
+// Scenarios with lower inflation than base → portfolio grows forever.
+// Scenarios with higher inflation → portfolio depletes eventually.
+// The return slider is the tipping-point dial.
+//
+// When netReturn <= baseTotalInflation (perpetuity impossible),
+// falls back to a 40-year growing annuity.
+// ══════════════════════════════════════════════════════════════════════
+
 var SCENARIOS = {
-  optimistic: { label:'Optimistic', color:'#4CAF7A', pillClass:'pill-green', cpi:0.020, healthcarePremium:0.015, lifestyleCreep:0.005, withdrawalRateAdj:0.000, assumptions:['CPI 2.0%','Healthcare +1.5%','Lifestyle +0.5%'] },
-  base:        { label:'Base Case', color:'#C9A84C', pillClass:'pill-gold',  cpi:0.030, healthcarePremium:0.020, lifestyleCreep:0.010, withdrawalRateAdj:0.002, assumptions:['CPI 3.0%','Healthcare +2.0%','Lifestyle +1%/yr'] },
-  pessimistic: { label:'Pessimistic',color:'#CF6679', pillClass:'pill-red',   cpi:0.045, healthcarePremium:0.030, lifestyleCreep:0.015, withdrawalRateAdj:0.005, assumptions:['CPI 4.5%','Healthcare +3.0%','Lifestyle +1.5%/yr'] },
-  stress:      { label:'Stress Test',color:'#6A9FBF', pillClass:'pill-blue',  cpi:0.065, healthcarePremium:0.040, lifestyleCreep:0.020, withdrawalRateAdj:0.010, assumptions:['CPI 6.5%','Healthcare +4.0%','Lifestyle +2%/yr'] }
+  optimistic: {
+    label:'Optimistic', color:'#4CAF7A', pillClass:'pill-green',
+    cpi:0.020, healthcarePremium:0.015, lifestyleCreep:0.005,
+    assumptions:['CPI 2.0%','Healthcare +1.5%','Lifestyle +0.5%']
+  },
+  base: {
+    label:'Base Case', color:'#C9A84C', pillClass:'pill-gold',
+    cpi:0.030, healthcarePremium:0.020, lifestyleCreep:0.010,
+    assumptions:['CPI 3.0%','Healthcare +2.0%','Lifestyle +1%/yr']
+  },
+  pessimistic: {
+    label:'Pessimistic', color:'#CF6679', pillClass:'pill-red',
+    cpi:0.045, healthcarePremium:0.030, lifestyleCreep:0.015,
+    assumptions:['CPI 4.5%','Healthcare +3.0%','Lifestyle +1.5%/yr']
+  },
+  stress: {
+    label:'Stress Test', color:'#6A9FBF', pillClass:'pill-blue',
+    cpi:0.065, healthcarePremium:0.040, lifestyleCreep:0.020,
+    assumptions:['CPI 6.5%','Healthcare +4.0%','Lifestyle +2%/yr']
+  }
 };
 
 var activeScenarios = { optimistic:true, base:true, pessimistic:true, stress:true };
-var mainChart=null, erosionChart=null, survivalChart=null;
+var survivalChart=null, withdrawalChart=null, erosionChart=null;
 
-// ── CORE CALCULATION ──────────────────────────────────────────────────
-function calcPortfolio(monthlyTarget, grossReturn, taxRate, buffer, scenarioKey) {
-  var sc = SCENARIOS[scenarioKey];
-  var priceInflation = sc.cpi + (sc.healthcarePremium * 0.15);
+function scenarioInflation(sc) {
+  return sc.cpi + (sc.healthcarePremium * 0.15) + sc.lifestyleCreep;
+}
+
+// ── STARTING PORTFOLIO — sized for base-case perpetuity ───────────────
+function getStartingPortfolio(monthlyTarget, grossReturn, taxRate, buffer) {
   var netReturn = grossReturn * (1 - taxRate);
-  var realReturn = netReturn - priceInflation;
-  var annualNetNeeded = monthlyTarget * 12;
-  var annualGrossNeeded = annualNetNeeded / (1 - taxRate);
+  var annualGross = (monthlyTarget * 12) / (1 - taxRate);
+  var baseInflation = scenarioInflation(SCENARIOS.base);
+  var spread = netReturn - baseInflation;
 
-  var basePortfolio, safeWR, perpetual;
+  var basePortfolio;
+  var isPerpetual;
 
-  if (realReturn > sc.withdrawalRateAdj + 0.001) {
-    safeWR = realReturn - sc.withdrawalRateAdj;
-    basePortfolio = annualGrossNeeded / safeWR;
-    perpetual = true;
+  if (spread > 0.001) {
+    // Growing perpetuity: PV = W / (r - g)
+    basePortfolio = annualGross / spread;
+    isPerpetual = true;
   } else {
-    var W=annualGrossNeeded, r=netReturn, g=priceInflation, n=30;
-    basePortfolio = (Math.abs(r-g)<0.0001) ? W*n : W*(1-Math.pow((1+g)/(1+r),n))/(r-g);
-    safeWR = annualGrossNeeded / basePortfolio;
-    perpetual = false;
-  }
-
-  var annualLifestyleIncrement = (annualNetNeeded * sc.lifestyleCreep) / (1 - taxRate);
-  var lifestyleAddon = perpetual ? annualLifestyleIncrement / Math.max(safeWR, 0.005) : annualLifestyleIncrement * 10;
-  var finalPortfolio = (basePortfolio + lifestyleAddon) * (1 + buffer);
-
-  // ── 50-YEAR YEAR-BY-YEAR SIMULATION ──────────────────────────────
-  var balances = [finalPortfolio];
-  var wd = annualGrossNeeded;
-  var totalInflation = priceInflation + sc.lifestyleCreep;
-  var depletionYear = null;
-
-  for (var y = 1; y <= 50; y++) {
-    var prev = balances[y-1];
-    if (prev <= 0) {
-      balances.push(0);
-      if (depletionYear === null) depletionYear = y - 1; // already gone
+    // Fallback: 40-year growing annuity (return too low for perpetuity)
+    var n = 40, r = netReturn, g = baseInflation;
+    if (Math.abs(r - g) < 0.0001) {
+      basePortfolio = annualGross * n;
     } else {
-      var next = prev * (1 + netReturn) - wd;
-      if (next <= 0 && depletionYear === null) {
-        // Interpolate exact depletion year
-        depletionYear = (y - 1) + (prev / (prev - next));
-      }
-      balances.push(Math.max(0, next));
+      basePortfolio = annualGross * (1 - Math.pow((1+g)/(1+r), n)) / (r - g);
     }
-    wd = wd * (1 + totalInflation);
+    isPerpetual = false;
   }
+
+  var finalPortfolio = basePortfolio * (1 + buffer);
 
   return {
     portfolio: finalPortfolio,
-    priceInflation: priceInflation,
+    annualGross: annualGross,
+    netReturn: netReturn,
+    initialWR: annualGross / finalPortfolio,
+    baseInflation: baseInflation,
+    spread: spread,
+    isPerpetual: isPerpetual
+  };
+}
+
+// ── SCENARIO SIMULATION ───────────────────────────────────────────────
+function simulateScenario(startingPortfolio, annualGross, netReturn, scenarioKey) {
+  var sc = SCENARIOS[scenarioKey];
+  var totalInflation = scenarioInflation(sc);
+  var realReturn = netReturn - totalInflation;
+
+  var balances = [startingPortfolio];
+  var withdrawals = [annualGross];
+  var wd = annualGross;
+  var depletionYear = null;
+
+  for (var y = 1; y <= 50; y++) {
+    wd = wd * (1 + totalInflation);
+    withdrawals.push(wd);
+
+    var prev = balances[y - 1];
+    if (prev <= 0) {
+      balances.push(0);
+      if (depletionYear === null) depletionYear = y - 1;
+    } else {
+      var grown = prev * (1 + netReturn);
+      var next = grown - wd;
+      if (next <= 0 && depletionYear === null) {
+        depletionYear = (y - 1) + grown / wd;
+      }
+      balances.push(Math.max(0, next));
+    }
+  }
+
+  return {
+    balances: balances,
+    withdrawals: withdrawals,
+    depletionYear: depletionYear,
     totalInflation: totalInflation,
-    realReturn: realReturn,
-    safeWR: safeWR,
-    annualGross: annualGrossNeeded,
-    balances: balances,        // year 0..50
-    depletionYear: depletionYear, // null = never depletes
-    perpetual: perpetual,
-    netReturn: netReturn
+    realReturn: realReturn
   };
 }
 
@@ -306,37 +361,67 @@ function getSliders() {
   };
 }
 
+// ── CALLOUT ───────────────────────────────────────────────────────────
+function renderStartingCallout() {
+  var s = getSliders();
+  var sp = getStartingPortfolio(s.income, s.ret, s.tax, s.buf);
+  document.getElementById('startingValue').textContent = fmt(sp.portfolio);
+  document.getElementById('startingSub').textContent =
+    fmt(sp.annualGross)+'/yr draw \u00b7 '+
+    pct(sp.initialWR)+' initial WR \u00b7 '+
+    pct(sp.netReturn)+' net return \u00b7 '+
+    pct(sp.spread)+' real spread';
+
+  var noteEl = document.getElementById('startingNote');
+  if (sp.isPerpetual) {
+    noteEl.textContent = 'Sized as growing perpetuity: net return ('+pct(sp.netReturn)+') exceeds base inflation ('+pct(sp.baseInflation)+'). Base-case withdrawals grow forever without exhausting principal.';
+  } else {
+    noteEl.textContent = 'Net return ('+pct(sp.netReturn)+') is below base inflation ('+pct(sp.baseInflation)+'). Perpetuity is not possible at this return. Sized as a 40-year growing annuity instead.';
+    noteEl.style.color = 'var(--red)';
+  }
+}
+
 // ── RESULT CARDS ──────────────────────────────────────────────────────
 function renderCards() {
   var s = getSliders();
+  var sp = getStartingPortfolio(s.income, s.ret, s.tax, s.buf);
   var grid = document.getElementById('resultGrid');
   grid.innerHTML = '';
+
   Object.keys(SCENARIOS).forEach(function(key) {
     if (!activeScenarios[key]) return;
     var sc = SCENARIOS[key];
-    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
+    var sim = simulateScenario(sp.portfolio, sp.annualGross, sp.netReturn, key);
     var card = document.createElement('div');
     card.className = 'result-card '+key;
 
-    var horizonPill, depLine;
-    if (r.depletionYear === null) {
+    var horizonPill, depLine, headlineColor;
+    if (sim.depletionYear === null) {
+      var bal50 = sim.balances[50];
       horizonPill = '<span class="pill pill-green">&#x267E; Perpetual</span>';
-      depLine = 'Never depletes';
+      depLine = 'Balance at yr 50: '+fmt(bal50);
+      headlineColor = 'var(--green)';
     } else {
-      var dy = Math.floor(r.depletionYear);
+      var dy = Math.floor(sim.depletionYear);
       var yr = new Date().getFullYear() + dy;
       horizonPill = '<span class="pill pill-red">&#x26A0; Depletes Yr '+dy+'</span>';
-      depLine = 'Runs out ~'+yr+' (year '+dy+')';
+      depLine = 'Runs out ~'+yr;
+      headlineColor = 'var(--red)';
     }
+
+    var bal10 = sim.balances[Math.min(10, sim.balances.length-1)];
+    var bal25 = sim.balances[Math.min(25, sim.balances.length-1)];
 
     var pills = sc.assumptions.map(function(a){ return '<span class="pill pill-gold">'+a+'</span>'; }).join('');
 
     card.innerHTML =
       '<div class="sc-name">'+sc.label+'</div>'+
-      '<div class="port-req">'+fmt(r.portfolio)+'</div>'+
-      '<div class="sub-det">'+fmt(s.income*12)+'/yr &middot; '+pct(r.safeWR)+' WR<br>'+
-        'Real return: '+pct(r.realReturn)+' &middot; Infl: '+pct(r.priceInflation)+'<br>'+
-        '<span style="color:'+(r.depletionYear===null?'var(--green)':'var(--red)')+'">'+depLine+'</span>'+
+      '<div class="port-req" style="color:'+headlineColor+'">'+
+        (sim.depletionYear===null ? 'Perpetual' : 'Year '+Math.floor(sim.depletionYear))+'</div>'+
+      '<div class="sub-det">'+
+        'Total infl: '+pct(sim.totalInflation)+' \u00b7 Real: '+pct(sim.realReturn)+'<br>'+
+        '@10yr: '+fmt(bal10)+' \u00b7 @25yr: '+fmt(bal25)+'<br>'+
+        '<span style="color:'+headlineColor+'">'+depLine+'</span>'+
       '</div>'+
       horizonPill+pills;
     grid.appendChild(card);
@@ -346,6 +431,7 @@ function renderCards() {
 // ── DEPLETION TRACKS ──────────────────────────────────────────────────
 function renderDepletionTracks() {
   var s = getSliders();
+  var sp = getStartingPortfolio(s.income, s.ret, s.tax, s.buf);
   var el = document.getElementById('depletionTracks');
   el.innerHTML = '';
   var HORIZON = 50;
@@ -354,18 +440,17 @@ function renderDepletionTracks() {
   Object.keys(SCENARIOS).forEach(function(key) {
     if (!activeScenarios[key]) return;
     var sc = SCENARIOS[key];
-    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
+    var sim = simulateScenario(sp.portfolio, sp.annualGross, sp.netReturn, key);
     var color = colorMap[key];
 
     var barPct, statText;
-    if (r.depletionYear === null) {
+    if (sim.depletionYear === null) {
       barPct = 100;
       statText = '<span style="color:var(--green)">Perpetual &#x267E;</span>';
     } else {
-      var dy = r.depletionYear;
-      barPct = Math.min(100, (dy / HORIZON) * 100);
-      var yr = new Date().getFullYear() + Math.floor(dy);
-      statText = '<span style="color:var(--red)">Depletes year '+Math.round(dy)+' (~'+yr+')</span>';
+      barPct = Math.min(100, (sim.depletionYear / HORIZON) * 100);
+      var yr = new Date().getFullYear() + Math.floor(sim.depletionYear);
+      statText = '<span style="color:var(--red)">Depletes yr '+Math.round(sim.depletionYear)+' (~'+yr+')</span>';
     }
 
     var row = document.createElement('div');
@@ -383,134 +468,110 @@ function renderDepletionTracks() {
 // ── SURVIVAL CHART ────────────────────────────────────────────────────
 function renderSurvivalChart() {
   var s = getSliders();
-  var years = [];
-  for (var i=0;i<=50;i++) years.push(i);
+  var sp = getStartingPortfolio(s.income, s.ret, s.tax, s.buf);
+  var years = []; for (var i=0;i<=50;i++) years.push(i);
   var labels = years.map(function(y){ return y===0?'Today':'Yr '+y; });
-
   var datasets = [];
+
   Object.keys(SCENARIOS).forEach(function(key) {
     if (!activeScenarios[key]) return;
     var sc = SCENARIOS[key];
-    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
-
-    // Main balance line
+    var sim = simulateScenario(sp.portfolio, sp.annualGross, sp.netReturn, key);
     datasets.push({
       label: sc.label,
-      data: r.balances.map(function(v){ return v/1e6; }),
-      borderColor: sc.color,
-      backgroundColor: 'transparent',
-      borderWidth: 2.5,
-      pointRadius: 0,
-      tension: 0.3,
-      fill: false
+      data: sim.balances.map(function(v){ return v/1e6; }),
+      borderColor: sc.color, backgroundColor: 'transparent',
+      borderWidth: 2.5, pointRadius: 0, tension: 0.3, fill: false
     });
-
-    // Depletion marker point
-    if (r.depletionYear !== null) {
-      var dy = Math.round(r.depletionYear);
-      var markerData = years.map(function(y){ return y===dy ? 0 : null; });
+    if (sim.depletionYear !== null) {
+      var dy = Math.round(sim.depletionYear);
       datasets.push({
         label: sc.label+' depletion',
-        data: markerData,
-        borderColor: sc.color,
-        backgroundColor: sc.color,
+        data: years.map(function(y){ return y===dy ? 0 : null; }),
+        borderColor: sc.color, backgroundColor: sc.color,
         borderWidth: 0,
         pointRadius: years.map(function(y){ return y===dy?8:0; }),
-        pointStyle: 'crossRot',
-        showLine: false,
-        fill: false
+        pointStyle: 'crossRot', showLine: false, fill: false
       });
     }
   });
-
-  // Zero floor line
   datasets.push({
-    label: 'Zero (depletion floor)',
-    data: years.map(function(){ return 0; }),
-    borderColor: 'rgba(207,102,121,0.3)',
-    borderWidth: 1,
-    borderDash: [4,4],
-    pointRadius: 0,
-    fill: false,
-    tension: 0
+    label: 'Zero floor', data: years.map(function(){ return 0; }),
+    borderColor: 'rgba(207,102,121,0.3)', borderWidth: 1, borderDash: [4,4],
+    pointRadius: 0, fill: false, tension: 0
   });
 
   if (survivalChart) survivalChart.destroy();
-  var ctx = document.getElementById('survivalChart').getContext('2d');
-  survivalChart = new Chart(ctx, {
-    type: 'line',
-    data: { labels:labels, datasets:datasets },
-    options: {
-      responsive: true, maintainAspectRatio: true,
-      interaction: { mode:'index', intersect:false },
-      plugins: {
-        legend: {
-          labels: {
-            color:'rgba(245,240,232,0.65)', font:{family:'DM Mono',size:10}, boxWidth:14, padding:14,
-            filter: function(item){ return item.text.indexOf('depletion') === -1 && item.text !== 'Zero (depletion floor)'; }
-          }
-        },
-        tooltip: {
-          backgroundColor:'#1A1A1A', borderColor:'rgba(201,168,76,0.3)', borderWidth:1,
-          titleColor:'#C9A84C', bodyColor:'rgba(245,240,232,0.8)',
-          titleFont:{family:'DM Mono',size:10}, bodyFont:{family:'DM Mono',size:10},
-          filter: function(item){ return item.dataset.label.indexOf('depletion') === -1 && item.dataset.label !== 'Zero (depletion floor)'; },
-          callbacks: {
-            label: function(ctx) {
-              if (ctx.parsed.y === 0 && ctx.dataset.label.indexOf('depletion') > -1) return null;
-              return '  '+ctx.dataset.label+': $'+ctx.parsed.y.toFixed(2)+'M';
-            }
-          }
+  survivalChart = new Chart(document.getElementById('survivalChart').getContext('2d'), {
+    type:'line', data:{labels:labels, datasets:datasets},
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{
+          color:'rgba(245,240,232,0.65)', font:{family:'DM Mono',size:10}, boxWidth:14, padding:14,
+          filter:function(item){return item.text.indexOf('depletion')===-1 && item.text!=='Zero floor';}
+        }},
+        tooltip:{
+          backgroundColor:'#1A1A1A',borderColor:'rgba(201,168,76,0.3)',borderWidth:1,
+          titleColor:'#C9A84C',bodyColor:'rgba(245,240,232,0.8)',
+          titleFont:{family:'DM Mono',size:10},bodyFont:{family:'DM Mono',size:10},
+          filter:function(item){return item.dataset.label.indexOf('depletion')===-1 && item.dataset.label!=='Zero floor';},
+          callbacks:{label:function(ctx){return '  '+ctx.dataset.label+': $'+ctx.parsed.y.toFixed(2)+'M';}}
         }
       },
-      scales: {
-        x: {
-          grid:{color:'rgba(201,168,76,0.06)'},
-          ticks:{color:'rgba(245,240,232,0.4)', font:{family:'DM Mono',size:9}, maxTicksLimit:11}
-        },
-        y: {
-          grid:{color:'rgba(201,168,76,0.06)'},
-          ticks:{color:'rgba(245,240,232,0.5)', font:{family:'DM Mono',size:9}, callback:function(v){return '$'+v.toFixed(0)+'M';}},
-          title:{display:true, text:'Portfolio Balance (Millions)', color:'rgba(201,168,76,0.5)', font:{family:'DM Mono',size:9}}
-        }
+      scales:{
+        x:{grid:{color:'rgba(201,168,76,0.06)'},ticks:{color:'rgba(245,240,232,0.4)',font:{family:'DM Mono',size:9},maxTicksLimit:11}},
+        y:{grid:{color:'rgba(201,168,76,0.06)'},
+          ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9},callback:function(v){return '$'+v.toFixed(0)+'M';}},
+          title:{display:true,text:'Portfolio Balance (Millions)',color:'rgba(201,168,76,0.5)',font:{family:'DM Mono',size:9}}}
       }
     }
   });
 }
 
-// ── MAIN CHART ────────────────────────────────────────────────────────
-function renderMainChart() {
+// ── WITHDRAWAL CHART ──────────────────────────────────────────────────
+function renderWithdrawalChart() {
   var s = getSliders();
-  var targets = [10000,20000,30000,40000,50000,75000,100000,150000,200000,250000];
-  var labels = targets.map(function(t){ return '$'+(t/1000)+'K/mo'; });
-  var datasets = Object.keys(SCENARIOS).filter(function(k){ return activeScenarios[k]; }).map(function(key) {
+  var sp = getStartingPortfolio(s.income, s.ret, s.tax, s.buf);
+  var years=[]; for(var i=0;i<=30;i++) years.push(i);
+  var labels = years.map(function(y){ return y===0?'Today':'Yr '+y; });
+  var datasets = Object.keys(SCENARIOS).filter(function(k){return activeScenarios[k];}).map(function(key) {
     var sc = SCENARIOS[key];
+    var sim = simulateScenario(sp.portfolio, sp.annualGross, sp.netReturn, key);
     return {
-      label:sc.label, data:targets.map(function(t){ return calcPortfolio(t,s.ret,s.tax,s.buf,key).portfolio/1e6; }),
-      borderColor:sc.color, backgroundColor:sc.color+'14', borderWidth:2,
-      pointRadius:4, pointBackgroundColor:sc.color, tension:0.3, fill:false
+      label:sc.label,
+      data:years.map(function(y){return sim.withdrawals[y]/1000;}),
+      borderColor:sc.color, backgroundColor:sc.color+'10',
+      borderWidth:2, pointRadius:2, tension:0.4, fill:false
     };
   });
-  if (mainChart) mainChart.destroy();
-  var ctx = document.getElementById('mainChart').getContext('2d');
-  mainChart = new Chart(ctx, {
-    type:'line', data:{labels:labels, datasets:datasets},
+  datasets.push({
+    label:'No inflation adjustment',
+    data:years.map(function(){return sp.annualGross/1000;}),
+    borderColor:'rgba(245,240,232,0.2)',borderWidth:1,borderDash:[6,4],
+    pointRadius:0,tension:0,fill:false
+  });
+
+  if (withdrawalChart) withdrawalChart.destroy();
+  withdrawalChart = new Chart(document.getElementById('withdrawalChart').getContext('2d'), {
+    type:'line',data:{labels:labels,datasets:datasets},
     options:{
-      responsive:true, maintainAspectRatio:true, interaction:{mode:'index',intersect:false},
+      responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{labels:{color:'rgba(245,240,232,0.7)',font:{family:'DM Mono',size:10},boxWidth:12,padding:14}},
+        legend:{labels:{color:'rgba(245,240,232,0.6)',font:{family:'DM Mono',size:9},boxWidth:10,padding:12}},
         tooltip:{
           backgroundColor:'#1A1A1A',borderColor:'rgba(201,168,76,0.3)',borderWidth:1,
           titleColor:'#C9A84C',bodyColor:'rgba(245,240,232,0.8)',
           titleFont:{family:'DM Mono',size:10},bodyFont:{family:'DM Mono',size:10},
-          callbacks:{label:function(ctx){return '  '+ctx.dataset.label+': $'+ctx.parsed.y.toFixed(2)+'M';}}
+          callbacks:{label:function(ctx){return '  '+ctx.dataset.label+': $'+ctx.parsed.y.toFixed(0)+'K/yr';}}
         }
       },
       scales:{
-        x:{grid:{color:'rgba(201,168,76,0.07)'},ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9}}},
-        y:{grid:{color:'rgba(201,168,76,0.07)'},
-          ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9},callback:function(v){return '$'+v.toFixed(0)+'M';}},
-          title:{display:true,text:'Portfolio Required (Millions)',color:'rgba(201,168,76,0.5)',font:{family:'DM Mono',size:9}}}
+        x:{grid:{color:'rgba(201,168,76,0.06)'},ticks:{color:'rgba(245,240,232,0.4)',font:{family:'DM Mono',size:9},maxTicksLimit:10}},
+        y:{grid:{color:'rgba(201,168,76,0.06)'},
+          ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9},callback:function(v){return '$'+v.toFixed(0)+'K';}},
+          title:{display:true,text:'Annual Gross Withdrawal ($K)',color:'rgba(201,168,76,0.5)',font:{family:'DM Mono',size:9}}}
       }
     }
   });
@@ -521,22 +582,28 @@ function renderErosionChart() {
   var s = getSliders();
   var years=[]; for(var i=0;i<=30;i++) years.push(i);
   var labels = years.map(function(y){ return y===0?'Today':'Yr '+y; });
-  var datasets = Object.keys(SCENARIOS).filter(function(k){ return activeScenarios[k]; }).map(function(key) {
+  var datasets = Object.keys(SCENARIOS).filter(function(k){return activeScenarios[k];}).map(function(key) {
     var sc = SCENARIOS[key];
-    var infl = sc.cpi + (sc.healthcarePremium*0.15) + sc.lifestyleCreep;
+    var ti = scenarioInflation(sc);
     return {
-      label:sc.label, data:years.map(function(y){ return s.income*Math.pow(1+infl,y)/1000; }),
-      borderColor:sc.color, backgroundColor:sc.color+'10', borderWidth:2, pointRadius:2, tension:0.4, fill:false
+      label:sc.label,
+      data:years.map(function(y){return s.income*Math.pow(1+ti,y)/1000;}),
+      borderColor:sc.color,backgroundColor:sc.color+'10',
+      borderWidth:2,pointRadius:2,tension:0.4,fill:false
     };
   });
-  datasets.push({ label:'Nominal (no adjustment)', data:years.map(function(){ return s.income/1000; }), borderColor:'rgba(245,240,232,0.2)', borderWidth:1, borderDash:[6,4], pointRadius:0, tension:0, fill:false });
+  datasets.push({
+    label:'Nominal (flat)',
+    data:years.map(function(){return s.income/1000;}),
+    borderColor:'rgba(245,240,232,0.2)',borderWidth:1,borderDash:[6,4],
+    pointRadius:0,tension:0,fill:false
+  });
 
   if (erosionChart) erosionChart.destroy();
-  var ctx = document.getElementById('erosionChart').getContext('2d');
-  erosionChart = new Chart(ctx, {
-    type:'line', data:{labels:labels, datasets:datasets},
+  erosionChart = new Chart(document.getElementById('erosionChart').getContext('2d'), {
+    type:'line',data:{labels:labels,datasets:datasets},
     options:{
-      responsive:true, maintainAspectRatio:true, interaction:{mode:'index',intersect:false},
+      responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{labels:{color:'rgba(245,240,232,0.6)',font:{family:'DM Mono',size:9},boxWidth:10,padding:12}},
         tooltip:{
@@ -550,7 +617,7 @@ function renderErosionChart() {
         x:{grid:{color:'rgba(201,168,76,0.06)'},ticks:{color:'rgba(245,240,232,0.4)',font:{family:'DM Mono',size:9},maxTicksLimit:10}},
         y:{grid:{color:'rgba(201,168,76,0.06)'},
           ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9},callback:function(v){return '$'+v.toFixed(0)+'K';}},
-          title:{display:true,text:'Monthly Equivalent in Nominal Dollars',color:'rgba(201,168,76,0.5)',font:{family:'DM Mono',size:9}}}
+          title:{display:true,text:'Monthly Equivalent (Nominal $K)',color:'rgba(201,168,76,0.5)',font:{family:'DM Mono',size:9}}}
       }
     }
   });
@@ -559,31 +626,42 @@ function renderErosionChart() {
 // ── TABLE ─────────────────────────────────────────────────────────────
 function renderTable() {
   var s = getSliders();
+  var sp = getStartingPortfolio(s.income, s.ret, s.tax, s.buf);
   var tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
   var cc = {optimistic:'green', base:'gold', pessimistic:'red', stress:'blue'};
+
   Object.keys(SCENARIOS).forEach(function(key) {
     var sc = SCENARIOS[key];
-    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
+    var sim = simulateScenario(sp.portfolio, sp.annualGross, sp.netReturn, key);
     var cl = cc[key];
     var tr = document.createElement('tr');
+
     var depStr, depCls;
-    if (r.depletionYear === null) { depStr='&#x267E; Never'; depCls='green'; }
-    else { depStr='Yr '+Math.round(r.depletionYear)+' (~'+(new Date().getFullYear()+Math.floor(r.depletionYear))+')'; depCls='red'; }
+    if (sim.depletionYear === null) {
+      depStr = '&#x267E; Perpetual';
+      depCls = 'green';
+    } else {
+      var dy = Math.round(sim.depletionYear);
+      depStr = 'Yr '+dy+' (~'+(new Date().getFullYear()+dy)+')';
+      depCls = 'red';
+    }
+
     tr.innerHTML =
       '<td class="'+cl+'" style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;">'+sc.label+'</td>'+
       '<td>'+pct(sc.cpi)+'</td>'+
-      '<td>'+pct(sc.cpi+sc.healthcarePremium)+'</td>'+
-      '<td style="'+(r.realReturn<0?'color:var(--red)':'')+'">'+pct(r.realReturn)+'</td>'+
-      '<td>'+pct(r.safeWR)+'</td>'+
-      '<td class="hl '+cl+'">'+fmt(r.portfolio)+'</td>'+
-      '<td>'+fmt(r.annualGross)+'</td>'+
+      '<td>'+pct(sim.totalInflation)+'</td>'+
+      '<td style="'+(sim.realReturn<0?'color:var(--red)':'')+'">'+pct(sim.realReturn)+'</td>'+
+      '<td>'+pct(sp.initialWR)+'</td>'+
+      '<td class="hl">'+fmt(sp.portfolio)+'</td>'+
+      '<td>'+fmt(sp.annualGross)+'</td>'+
+      '<td>'+fmt(sim.withdrawals[10])+'</td>'+
       '<td class="'+depCls+'">'+depStr+'</td>';
     tbody.appendChild(tr);
   });
 }
 
-// ── SLIDER EVENTS ─────────────────────────────────────────────────────
+// ── EVENTS ────────────────────────────────────────────────────────────
 document.getElementById('incomeSlider').addEventListener('input', function() {
   document.getElementById('incomeDisplay').innerHTML = '$'+parseInt(this.value).toLocaleString()+' <span>/mo</span>';
   updateAll();
@@ -608,10 +686,11 @@ function toggleScenario(key, btn) {
 }
 
 function updateAll() {
+  renderStartingCallout();
   renderCards();
   renderDepletionTracks();
   renderSurvivalChart();
-  renderMainChart();
+  renderWithdrawalChart();
   renderErosionChart();
   renderTable();
 }
