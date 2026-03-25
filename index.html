@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Freedom Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --gold:#C9A84C; --gold-dim:rgba(201,168,76,0.15); --cream:#F5F0E8;
+    --ink:#0D0D0D; --ink-mid:#1A1A1A; --ink-light:#2A2A2A;
+    --text-dim:rgba(245,240,232,0.45); --text-mid:rgba(245,240,232,0.72);
+    --border:rgba(201,168,76,0.2); --green:#4CAF7A; --red:#CF6679; --blue:#6A9FBF;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--ink); color:var(--cream); font-family:'DM Mono',monospace; min-height:100vh; overflow-x:hidden; }
+  .grain {
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.5;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  }
+  .container { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:40px 24px 80px; }
+
+  /* HEADER */
+  header { margin-bottom:48px; border-bottom:1px solid var(--border); padding-bottom:32px; }
+  .eyebrow { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+  h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,58px); font-weight:300; line-height:1.05; letter-spacing:-0.02em; }
+  h1 em { font-style:italic; color:var(--gold); }
+  .subtitle { margin-top:12px; font-size:11px; color:var(--text-dim); letter-spacing:0.04em; line-height:1.75; max-width:580px; }
+
+  /* CONTROLS */
+  .controls-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; margin-bottom:40px; }
+  .control-card { background:var(--ink-mid); border:1px solid var(--border); padding:20px; position:relative; }
+  .control-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,var(--gold),transparent); }
+  .control-label { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:block; }
+  .control-value { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:500; color:var(--cream); margin-bottom:12px; letter-spacing:-0.02em; }
+  .control-value span { font-size:13px; color:var(--text-dim); font-weight:300; }
+  input[type=range] { -webkit-appearance:none; width:100%; height:2px; background:rgba(201,168,76,0.2); outline:none; cursor:pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--gold); cursor:pointer; box-shadow:0 0 10px rgba(201,168,76,0.35); }
+  input[type=range]::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:var(--gold); cursor:pointer; border:none; }
+
+  /* SCENARIO TOGGLES */
+  .scenario-bar { display:flex; gap:10px; margin-bottom:32px; flex-wrap:wrap; align-items:center; }
+  .scenario-label { font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--text-dim); margin-right:4px; }
+  .toggle-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; padding:7px 14px; border:1px solid; cursor:pointer; transition:all 0.2s; background:transparent; text-transform:uppercase; }
+  .toggle-btn.optimistic { border-color:var(--green); color:var(--green); }
+  .toggle-btn.optimistic.active { background:var(--green); color:var(--ink); }
+  .toggle-btn.base { border-color:var(--gold); color:var(--gold); }
+  .toggle-btn.base.active { background:var(--gold); color:var(--ink); }
+  .toggle-btn.pessimistic { border-color:var(--red); color:var(--red); }
+  .toggle-btn.pessimistic.active { background:var(--red); color:var(--cream); }
+  .toggle-btn.stress { border-color:var(--blue); color:var(--blue); }
+  .toggle-btn.stress.active { background:var(--blue); color:var(--ink); }
+
+  /* RESULT CARDS */
+  .result-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px; background:var(--border); margin-bottom:40px; }
+  .result-card { background:var(--ink-mid); padding:22px 18px; position:relative; overflow:hidden; }
+  .result-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+  .result-card.optimistic::after { background:var(--green); }
+  .result-card.base::after { background:var(--gold); }
+  .result-card.pessimistic::after { background:var(--red); }
+  .result-card.stress::after { background:var(--blue); }
+  .result-card .sc-name { font-size:9px; letter-spacing:0.3em; text-transform:uppercase; margin-bottom:6px; }
+  .result-card.optimistic .sc-name { color:var(--green); }
+  .result-card.base .sc-name { color:var(--gold); }
+  .result-card.pessimistic .sc-name { color:var(--red); }
+  .result-card.stress .sc-name { color:var(--blue); }
+  .result-card .port-req { font-family:'Cormorant Garamond',serif; font-size:clamp(20px,2.8vw,30px); font-weight:500; color:var(--cream); letter-spacing:-0.02em; margin-bottom:3px; }
+  .result-card .sub-det { font-size:9px; color:var(--text-dim); line-height:1.65; }
+  .pill { display:inline-block; font-size:8px; padding:2px 7px; letter-spacing:0.1em; margin-top:8px; margin-right:3px; }
+  .pill-gold { background:var(--gold-dim); color:var(--gold); }
+  .pill-green { background:rgba(76,175,122,0.12); color:var(--green); }
+  .pill-red { background:rgba(207,102,121,0.15); color:var(--red); }
+  .pill-blue { background:rgba(106,159,191,0.15); color:var(--blue); }
+
+  /* DEPLETION SUMMARY BAR */
+  .depletion-bar { background:var(--ink-mid); border:1px solid var(--border); border-left:3px solid var(--gold); padding:20px 24px; margin-bottom:40px; }
+  .depletion-bar-title { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  .depletion-tracks { display:flex; flex-direction:column; gap:10px; }
+  .dep-track { display:flex; align-items:center; gap:12px; }
+  .dep-track-label { font-size:9px; letter-spacing:0.1em; text-transform:uppercase; min-width:88px; }
+  .dep-track-bar-wrap { flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:0; position:relative; overflow:hidden; }
+  .dep-track-bar-fill { height:100%; border-radius:0; transition:width 0.5s ease; }
+  .dep-track-stat { font-size:10px; min-width:110px; text-align:right; letter-spacing:0.05em; }
+
+  /* CHARTS */
+  .chart-section { margin-bottom:40px; }
+  .chart-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .section-title { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:400; color:var(--cream); letter-spacing:-0.01em; }
+  .chart-note { font-size:9px; color:var(--text-dim); letter-spacing:0.05em; }
+  .chart-wrap { background:var(--ink-mid); border:1px solid var(--border); padding:24px; }
+  .chart-wrap canvas { max-height:400px; }
+
+  /* TABLE */
+  .table-wrap { background:var(--ink-mid); border:1px solid var(--border); overflow:hidden; margin-bottom:40px; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; min-width:680px; }
+  thead { background:var(--ink-light); }
+  th { font-size:8px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); padding:13px 14px; text-align:left; border-bottom:1px solid var(--border); }
+  td { font-size:11px; padding:11px 14px; border-bottom:1px solid rgba(201,168,76,0.07); color:var(--text-mid); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(201,168,76,0.04); }
+  td.hl { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:500; color:var(--cream); }
+  td.green { color:var(--green); } td.red { color:var(--red); } td.gold { color:var(--gold); } td.blue { color:var(--blue); }
+
+  /* FACTORS */
+  .factors-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--border); margin-bottom:40px; }
+  .factor-card { background:var(--ink-mid); padding:18px 16px; }
+  .factor-icon { font-size:18px; margin-bottom:8px; }
+  .factor-title { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+  .factor-body { font-size:10px; color:var(--text-mid); line-height:1.7; }
+
+  .disclaimer { font-size:9px; color:var(--text-dim); line-height:1.8; border-top:1px solid var(--border); padding-top:24px; }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Portfolio Freedom Calculator &middot; 2026</div>
+    <h1>Capital required to generate<br><em>$50,000/month</em> indefinitely</h1>
+    <p class="subtitle">Four inflation scenarios, full 50-year survivability projection, and depletion timelines. Sliders adjust all scenarios simultaneously. All figures in today's purchasing power.</p>
+  </header>
+
+  <div class="controls-grid">
+    <div class="control-card">
+      <span class="control-label">Monthly Income Target</span>
+      <div class="control-value" id="incomeDisplay">$50,000 <span>/mo</span></div>
+      <input type="range" id="incomeSlider" min="10000" max="250000" step="5000" value="50000">
+    </div>
+    <div class="control-card">
+      <span class="control-label">Portfolio Gross Return</span>
+      <div class="control-value" id="returnDisplay">7.0 <span>% / yr</span></div>
+      <input type="range" id="returnSlider" min="3" max="12" step="0.5" value="7">
+    </div>
+    <div class="control-card">
+      <span class="control-label">Tax Drag on Distributions</span>
+      <div class="control-value" id="taxDisplay">23.8 <span>%</span></div>
+      <input type="range" id="taxSlider" min="0" max="45" step="0.5" value="23.8">
+    </div>
+    <div class="control-card">
+      <span class="control-label">Sequence-of-Returns Buffer</span>
+      <div class="control-value" id="bufferDisplay">10 <span>%</span></div>
+      <input type="range" id="bufferSlider" min="0" max="30" step="1" value="10">
+    </div>
+  </div>
+
+  <div class="scenario-bar">
+    <span class="scenario-label">Scenarios:</span>
+    <button class="toggle-btn optimistic active" onclick="toggleScenario('optimistic',this)">Optimistic</button>
+    <button class="toggle-btn base active" onclick="toggleScenario('base',this)">Base Case</button>
+    <button class="toggle-btn pessimistic active" onclick="toggleScenario('pessimistic',this)">Pessimistic</button>
+    <button class="toggle-btn stress active" onclick="toggleScenario('stress',this)">Stress Test</button>
+  </div>
+
+  <div class="result-grid" id="resultGrid"></div>
+
+  <!-- DEPLETION SUMMARY BAR -->
+  <div class="depletion-bar">
+    <div class="depletion-bar-title">Portfolio Survivability &mdash; Years until depletion at current settings</div>
+    <div class="depletion-tracks" id="depletionTracks"></div>
+  </div>
+
+  <!-- SURVIVABILITY CHART -->
+  <div class="chart-section">
+    <div class="chart-header">
+      <div class="section-title">Portfolio Balance Over 50 Years</div>
+      <div class="chart-note">Clips to zero at depletion &middot; Dashed line = break-even floor</div>
+    </div>
+    <div class="chart-wrap"><canvas id="survivalChart"></canvas></div>
+  </div>
+
+  <!-- REQUIREMENT BY TARGET CHART -->
+  <div class="chart-section">
+    <div class="chart-header">
+      <div class="section-title">Required Capital by Monthly Target</div>
+      <div class="chart-note">All active scenarios &middot; Sliders update in real time</div>
+    </div>
+    <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+  </div>
+
+  <!-- EROSION CHART -->
+  <div class="chart-section">
+    <div class="chart-header">
+      <div class="section-title">Purchasing Power Erosion Over 30 Years</div>
+      <div class="chart-note">Nominal dollars needed to match today's real spending power</div>
+    </div>
+    <div class="chart-wrap"><canvas id="erosionChart"></canvas></div>
+  </div>
+
+  <div class="section-title" style="margin-bottom:16px;">Detailed Assumptions</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th><th>CPI</th><th>Healthcare</th><th>Real Return</th>
+          <th>Implied WR</th><th>Portfolio Required</th><th>Annual Draw</th><th>Depletes</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="margin-bottom:16px;">Factors Incorporated</div>
+  <div class="factors-grid">
+    <div class="factor-card"><div class="factor-icon">📈</div><div class="factor-title">CPI Inflation</div><div class="factor-body">Optimistic 2% · Base 3% · Pessimistic 4.5% · Stress 6.5%. Post-pandemic structurally elevated baseline assumed in the base case.</div></div>
+    <div class="factor-card"><div class="factor-icon">🏥</div><div class="factor-title">Healthcare Costs</div><div class="factor-body">Medical inflation historically runs 1.5–2× CPI. Premium coverage for high-income households modeled at 5–9% annual increases. Weighted at 15% of total spend.</div></div>
+    <div class="factor-card"><div class="factor-icon">💸</div><div class="factor-title">Tax Drag</div><div class="factor-body">LTCG + NIIT federal rate of 23.8% on distributions. No Texas state income tax. Adjustable via slider for different portfolio structures.</div></div>
+    <div class="factor-card"><div class="factor-icon">📉</div><div class="factor-title">Sequence Risk</div><div class="factor-body">Early bear markets permanently impair a withdrawal portfolio. The buffer slider adds capital above the perpetuity floor to absorb a bad opening sequence.</div></div>
+    <div class="factor-card"><div class="factor-icon">🏠</div><div class="factor-title">Lifestyle Creep</div><div class="factor-body">High-income households increase real spending 0.5–2%/yr beyond CPI. Modeled as a separately capitalized addon — not hidden in the discount rate where it double-counts.</div></div>
+    <div class="factor-card"><div class="factor-icon">🏦</div><div class="factor-title">Withdrawal Framework</div><div class="factor-body">Classic 4% rule targets a 30-year horizon. True endowment-style preservation requires 2.5–3.5% real. Each scenario uses whichever approach applies given the real return.</div></div>
+    <div class="factor-card"><div class="factor-icon">♾️</div><div class="factor-title">Perpetual vs. Finite</div><div class="factor-body">When after-tax real return exceeds inflation, a perpetuity is used — principal preserved forever. Below that threshold, a finite-horizon growing annuity is used instead.</div></div>
+    <div class="factor-card"><div class="factor-icon">⚠️</div><div class="factor-title">Stagflation Stress</div><div class="factor-body">Stress scenario = 1970s analog: 6.5% sustained CPI, aggressive healthcare cost growth, 2%/yr lifestyle expansion. Designed as the worst-case survival test.</div></div>
+  </div>
+
+  <p class="disclaimer">For illustrative and educational purposes only. Not financial, legal, or investment advice. Past returns do not guarantee future results. Individual tax situations vary. Consult a qualified financial planner, CPA, and estate attorney before major capital decisions.</p>
+
+</div>
+
+<script>
+var SCENARIOS = {
+  optimistic: { label:'Optimistic', color:'#4CAF7A', pillClass:'pill-green', cpi:0.020, healthcarePremium:0.015, lifestyleCreep:0.005, withdrawalRateAdj:0.000, assumptions:['CPI 2.0%','Healthcare +1.5%','Lifestyle +0.5%'] },
+  base:        { label:'Base Case', color:'#C9A84C', pillClass:'pill-gold',  cpi:0.030, healthcarePremium:0.020, lifestyleCreep:0.010, withdrawalRateAdj:0.002, assumptions:['CPI 3.0%','Healthcare +2.0%','Lifestyle +1%/yr'] },
+  pessimistic: { label:'Pessimistic',color:'#CF6679', pillClass:'pill-red',   cpi:0.045, healthcarePremium:0.030, lifestyleCreep:0.015, withdrawalRateAdj:0.005, assumptions:['CPI 4.5%','Healthcare +3.0%','Lifestyle +1.5%/yr'] },
+  stress:      { label:'Stress Test',color:'#6A9FBF', pillClass:'pill-blue',  cpi:0.065, healthcarePremium:0.040, lifestyleCreep:0.020, withdrawalRateAdj:0.010, assumptions:['CPI 6.5%','Healthcare +4.0%','Lifestyle +2%/yr'] }
+};
+
+var activeScenarios = { optimistic:true, base:true, pessimistic:true, stress:true };
+var mainChart=null, erosionChart=null, survivalChart=null;
+
+// ── CORE CALCULATION ──────────────────────────────────────────────────
+function calcPortfolio(monthlyTarget, grossReturn, taxRate, buffer, scenarioKey) {
+  var sc = SCENARIOS[scenarioKey];
+  var priceInflation = sc.cpi + (sc.healthcarePremium * 0.15);
+  var netReturn = grossReturn * (1 - taxRate);
+  var realReturn = netReturn - priceInflation;
+  var annualNetNeeded = monthlyTarget * 12;
+  var annualGrossNeeded = annualNetNeeded / (1 - taxRate);
+
+  var basePortfolio, safeWR, perpetual;
+
+  if (realReturn > sc.withdrawalRateAdj + 0.001) {
+    safeWR = realReturn - sc.withdrawalRateAdj;
+    basePortfolio = annualGrossNeeded / safeWR;
+    perpetual = true;
+  } else {
+    var W=annualGrossNeeded, r=netReturn, g=priceInflation, n=30;
+    basePortfolio = (Math.abs(r-g)<0.0001) ? W*n : W*(1-Math.pow((1+g)/(1+r),n))/(r-g);
+    safeWR = annualGrossNeeded / basePortfolio;
+    perpetual = false;
+  }
+
+  var annualLifestyleIncrement = (annualNetNeeded * sc.lifestyleCreep) / (1 - taxRate);
+  var lifestyleAddon = perpetual ? annualLifestyleIncrement / Math.max(safeWR, 0.005) : annualLifestyleIncrement * 10;
+  var finalPortfolio = (basePortfolio + lifestyleAddon) * (1 + buffer);
+
+  // ── 50-YEAR YEAR-BY-YEAR SIMULATION ──────────────────────────────
+  var balances = [finalPortfolio];
+  var wd = annualGrossNeeded;
+  var totalInflation = priceInflation + sc.lifestyleCreep;
+  var depletionYear = null;
+
+  for (var y = 1; y <= 50; y++) {
+    var prev = balances[y-1];
+    if (prev <= 0) {
+      balances.push(0);
+      if (depletionYear === null) depletionYear = y - 1; // already gone
+    } else {
+      var next = prev * (1 + netReturn) - wd;
+      if (next <= 0 && depletionYear === null) {
+        // Interpolate exact depletion year
+        depletionYear = (y - 1) + (prev / (prev - next));
+      }
+      balances.push(Math.max(0, next));
+    }
+    wd = wd * (1 + totalInflation);
+  }
+
+  return {
+    portfolio: finalPortfolio,
+    priceInflation: priceInflation,
+    totalInflation: totalInflation,
+    realReturn: realReturn,
+    safeWR: safeWR,
+    annualGross: annualGrossNeeded,
+    balances: balances,        // year 0..50
+    depletionYear: depletionYear, // null = never depletes
+    perpetual: perpetual,
+    netReturn: netReturn
+  };
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function fmt(n) {
+  if (Math.abs(n) >= 1e9) return '$'+(n/1e9).toFixed(2)+'B';
+  if (Math.abs(n) >= 1e6) return '$'+(n/1e6).toFixed(2)+'M';
+  return '$'+Math.round(n).toLocaleString('en-US');
+}
+function pct(n) { return (n*100).toFixed(2)+'%'; }
+function getSliders() {
+  return {
+    income: parseInt(document.getElementById('incomeSlider').value),
+    ret:    parseFloat(document.getElementById('returnSlider').value)/100,
+    tax:    parseFloat(document.getElementById('taxSlider').value)/100,
+    buf:    parseFloat(document.getElementById('bufferSlider').value)/100
+  };
+}
+
+// ── RESULT CARDS ──────────────────────────────────────────────────────
+function renderCards() {
+  var s = getSliders();
+  var grid = document.getElementById('resultGrid');
+  grid.innerHTML = '';
+  Object.keys(SCENARIOS).forEach(function(key) {
+    if (!activeScenarios[key]) return;
+    var sc = SCENARIOS[key];
+    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
+    var card = document.createElement('div');
+    card.className = 'result-card '+key;
+
+    var horizonPill, depLine;
+    if (r.depletionYear === null) {
+      horizonPill = '<span class="pill pill-green">&#x267E; Perpetual</span>';
+      depLine = 'Never depletes';
+    } else {
+      var dy = Math.floor(r.depletionYear);
+      var yr = new Date().getFullYear() + dy;
+      horizonPill = '<span class="pill pill-red">&#x26A0; Depletes Yr '+dy+'</span>';
+      depLine = 'Runs out ~'+yr+' (year '+dy+')';
+    }
+
+    var pills = sc.assumptions.map(function(a){ return '<span class="pill pill-gold">'+a+'</span>'; }).join('');
+
+    card.innerHTML =
+      '<div class="sc-name">'+sc.label+'</div>'+
+      '<div class="port-req">'+fmt(r.portfolio)+'</div>'+
+      '<div class="sub-det">'+fmt(s.income*12)+'/yr &middot; '+pct(r.safeWR)+' WR<br>'+
+        'Real return: '+pct(r.realReturn)+' &middot; Infl: '+pct(r.priceInflation)+'<br>'+
+        '<span style="color:'+(r.depletionYear===null?'var(--green)':'var(--red)')+'">'+depLine+'</span>'+
+      '</div>'+
+      horizonPill+pills;
+    grid.appendChild(card);
+  });
+}
+
+// ── DEPLETION TRACKS ──────────────────────────────────────────────────
+function renderDepletionTracks() {
+  var s = getSliders();
+  var el = document.getElementById('depletionTracks');
+  el.innerHTML = '';
+  var HORIZON = 50;
+  var colorMap = { optimistic:'var(--green)', base:'var(--gold)', pessimistic:'var(--red)', stress:'var(--blue)' };
+
+  Object.keys(SCENARIOS).forEach(function(key) {
+    if (!activeScenarios[key]) return;
+    var sc = SCENARIOS[key];
+    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
+    var color = colorMap[key];
+
+    var barPct, statText;
+    if (r.depletionYear === null) {
+      barPct = 100;
+      statText = '<span style="color:var(--green)">Perpetual &#x267E;</span>';
+    } else {
+      var dy = r.depletionYear;
+      barPct = Math.min(100, (dy / HORIZON) * 100);
+      var yr = new Date().getFullYear() + Math.floor(dy);
+      statText = '<span style="color:var(--red)">Depletes year '+Math.round(dy)+' (~'+yr+')</span>';
+    }
+
+    var row = document.createElement('div');
+    row.className = 'dep-track';
+    row.innerHTML =
+      '<div class="dep-track-label" style="color:'+color+'">'+sc.label+'</div>'+
+      '<div class="dep-track-bar-wrap">'+
+        '<div class="dep-track-bar-fill" style="width:'+barPct+'%;background:'+color+'"></div>'+
+      '</div>'+
+      '<div class="dep-track-stat">'+statText+'</div>';
+    el.appendChild(row);
+  });
+}
+
+// ── SURVIVAL CHART ────────────────────────────────────────────────────
+function renderSurvivalChart() {
+  var s = getSliders();
+  var years = [];
+  for (var i=0;i<=50;i++) years.push(i);
+  var labels = years.map(function(y){ return y===0?'Today':'Yr '+y; });
+
+  var datasets = [];
+  Object.keys(SCENARIOS).forEach(function(key) {
+    if (!activeScenarios[key]) return;
+    var sc = SCENARIOS[key];
+    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
+
+    // Main balance line
+    datasets.push({
+      label: sc.label,
+      data: r.balances.map(function(v){ return v/1e6; }),
+      borderColor: sc.color,
+      backgroundColor: 'transparent',
+      borderWidth: 2.5,
+      pointRadius: 0,
+      tension: 0.3,
+      fill: false
+    });
+
+    // Depletion marker point
+    if (r.depletionYear !== null) {
+      var dy = Math.round(r.depletionYear);
+      var markerData = years.map(function(y){ return y===dy ? 0 : null; });
+      datasets.push({
+        label: sc.label+' depletion',
+        data: markerData,
+        borderColor: sc.color,
+        backgroundColor: sc.color,
+        borderWidth: 0,
+        pointRadius: years.map(function(y){ return y===dy?8:0; }),
+        pointStyle: 'crossRot',
+        showLine: false,
+        fill: false
+      });
+    }
+  });
+
+  // Zero floor line
+  datasets.push({
+    label: 'Zero (depletion floor)',
+    data: years.map(function(){ return 0; }),
+    borderColor: 'rgba(207,102,121,0.3)',
+    borderWidth: 1,
+    borderDash: [4,4],
+    pointRadius: 0,
+    fill: false,
+    tension: 0
+  });
+
+  if (survivalChart) survivalChart.destroy();
+  var ctx = document.getElementById('survivalChart').getContext('2d');
+  survivalChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels:labels, datasets:datasets },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: {
+          labels: {
+            color:'rgba(245,240,232,0.65)', font:{family:'DM Mono',size:10}, boxWidth:14, padding:14,
+            filter: function(item){ return item.text.indexOf('depletion') === -1 && item.text !== 'Zero (depletion floor)'; }
+          }
+        },
+        tooltip: {
+          backgroundColor:'#1A1A1A', borderColor:'rgba(201,168,76,0.3)', borderWidth:1,
+          titleColor:'#C9A84C', bodyColor:'rgba(245,240,232,0.8)',
+          titleFont:{family:'DM Mono',size:10}, bodyFont:{family:'DM Mono',size:10},
+          filter: function(item){ return item.dataset.label.indexOf('depletion') === -1 && item.dataset.label !== 'Zero (depletion floor)'; },
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.parsed.y === 0 && ctx.dataset.label.indexOf('depletion') > -1) return null;
+              return '  '+ctx.dataset.label+': $'+ctx.parsed.y.toFixed(2)+'M';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid:{color:'rgba(201,168,76,0.06)'},
+          ticks:{color:'rgba(245,240,232,0.4)', font:{family:'DM Mono',size:9}, maxTicksLimit:11}
+        },
+        y: {
+          grid:{color:'rgba(201,168,76,0.06)'},
+          ticks:{color:'rgba(245,240,232,0.5)', font:{family:'DM Mono',size:9}, callback:function(v){return '$'+v.toFixed(0)+'M';}},
+          title:{display:true, text:'Portfolio Balance (Millions)', color:'rgba(201,168,76,0.5)', font:{family:'DM Mono',size:9}}
+        }
+      }
+    }
+  });
+}
+
+// ── MAIN CHART ────────────────────────────────────────────────────────
+function renderMainChart() {
+  var s = getSliders();
+  var targets = [10000,20000,30000,40000,50000,75000,100000,150000,200000,250000];
+  var labels = targets.map(function(t){ return '$'+(t/1000)+'K/mo'; });
+  var datasets = Object.keys(SCENARIOS).filter(function(k){ return activeScenarios[k]; }).map(function(key) {
+    var sc = SCENARIOS[key];
+    return {
+      label:sc.label, data:targets.map(function(t){ return calcPortfolio(t,s.ret,s.tax,s.buf,key).portfolio/1e6; }),
+      borderColor:sc.color, backgroundColor:sc.color+'14', borderWidth:2,
+      pointRadius:4, pointBackgroundColor:sc.color, tension:0.3, fill:false
+    };
+  });
+  if (mainChart) mainChart.destroy();
+  var ctx = document.getElementById('mainChart').getContext('2d');
+  mainChart = new Chart(ctx, {
+    type:'line', data:{labels:labels, datasets:datasets},
+    options:{
+      responsive:true, maintainAspectRatio:true, interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'rgba(245,240,232,0.7)',font:{family:'DM Mono',size:10},boxWidth:12,padding:14}},
+        tooltip:{
+          backgroundColor:'#1A1A1A',borderColor:'rgba(201,168,76,0.3)',borderWidth:1,
+          titleColor:'#C9A84C',bodyColor:'rgba(245,240,232,0.8)',
+          titleFont:{family:'DM Mono',size:10},bodyFont:{family:'DM Mono',size:10},
+          callbacks:{label:function(ctx){return '  '+ctx.dataset.label+': $'+ctx.parsed.y.toFixed(2)+'M';}}
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(201,168,76,0.07)'},ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9}}},
+        y:{grid:{color:'rgba(201,168,76,0.07)'},
+          ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9},callback:function(v){return '$'+v.toFixed(0)+'M';}},
+          title:{display:true,text:'Portfolio Required (Millions)',color:'rgba(201,168,76,0.5)',font:{family:'DM Mono',size:9}}}
+      }
+    }
+  });
+}
+
+// ── EROSION CHART ─────────────────────────────────────────────────────
+function renderErosionChart() {
+  var s = getSliders();
+  var years=[]; for(var i=0;i<=30;i++) years.push(i);
+  var labels = years.map(function(y){ return y===0?'Today':'Yr '+y; });
+  var datasets = Object.keys(SCENARIOS).filter(function(k){ return activeScenarios[k]; }).map(function(key) {
+    var sc = SCENARIOS[key];
+    var infl = sc.cpi + (sc.healthcarePremium*0.15) + sc.lifestyleCreep;
+    return {
+      label:sc.label, data:years.map(function(y){ return s.income*Math.pow(1+infl,y)/1000; }),
+      borderColor:sc.color, backgroundColor:sc.color+'10', borderWidth:2, pointRadius:2, tension:0.4, fill:false
+    };
+  });
+  datasets.push({ label:'Nominal (no adjustment)', data:years.map(function(){ return s.income/1000; }), borderColor:'rgba(245,240,232,0.2)', borderWidth:1, borderDash:[6,4], pointRadius:0, tension:0, fill:false });
+
+  if (erosionChart) erosionChart.destroy();
+  var ctx = document.getElementById('erosionChart').getContext('2d');
+  erosionChart = new Chart(ctx, {
+    type:'line', data:{labels:labels, datasets:datasets},
+    options:{
+      responsive:true, maintainAspectRatio:true, interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'rgba(245,240,232,0.6)',font:{family:'DM Mono',size:9},boxWidth:10,padding:12}},
+        tooltip:{
+          backgroundColor:'#1A1A1A',borderColor:'rgba(201,168,76,0.3)',borderWidth:1,
+          titleColor:'#C9A84C',bodyColor:'rgba(245,240,232,0.8)',
+          titleFont:{family:'DM Mono',size:10},bodyFont:{family:'DM Mono',size:10},
+          callbacks:{label:function(ctx){return '  '+ctx.dataset.label+': $'+ctx.parsed.y.toFixed(1)+'K/mo';}}
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(201,168,76,0.06)'},ticks:{color:'rgba(245,240,232,0.4)',font:{family:'DM Mono',size:9},maxTicksLimit:10}},
+        y:{grid:{color:'rgba(201,168,76,0.06)'},
+          ticks:{color:'rgba(245,240,232,0.5)',font:{family:'DM Mono',size:9},callback:function(v){return '$'+v.toFixed(0)+'K';}},
+          title:{display:true,text:'Monthly Equivalent in Nominal Dollars',color:'rgba(201,168,76,0.5)',font:{family:'DM Mono',size:9}}}
+      }
+    }
+  });
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────
+function renderTable() {
+  var s = getSliders();
+  var tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  var cc = {optimistic:'green', base:'gold', pessimistic:'red', stress:'blue'};
+  Object.keys(SCENARIOS).forEach(function(key) {
+    var sc = SCENARIOS[key];
+    var r = calcPortfolio(s.income, s.ret, s.tax, s.buf, key);
+    var cl = cc[key];
+    var tr = document.createElement('tr');
+    var depStr, depCls;
+    if (r.depletionYear === null) { depStr='&#x267E; Never'; depCls='green'; }
+    else { depStr='Yr '+Math.round(r.depletionYear)+' (~'+(new Date().getFullYear()+Math.floor(r.depletionYear))+')'; depCls='red'; }
+    tr.innerHTML =
+      '<td class="'+cl+'" style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;">'+sc.label+'</td>'+
+      '<td>'+pct(sc.cpi)+'</td>'+
+      '<td>'+pct(sc.cpi+sc.healthcarePremium)+'</td>'+
+      '<td style="'+(r.realReturn<0?'color:var(--red)':'')+'">'+pct(r.realReturn)+'</td>'+
+      '<td>'+pct(r.safeWR)+'</td>'+
+      '<td class="hl '+cl+'">'+fmt(r.portfolio)+'</td>'+
+      '<td>'+fmt(r.annualGross)+'</td>'+
+      '<td class="'+depCls+'">'+depStr+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+// ── SLIDER EVENTS ─────────────────────────────────────────────────────
+document.getElementById('incomeSlider').addEventListener('input', function() {
+  document.getElementById('incomeDisplay').innerHTML = '$'+parseInt(this.value).toLocaleString()+' <span>/mo</span>';
+  updateAll();
+});
+document.getElementById('returnSlider').addEventListener('input', function() {
+  document.getElementById('returnDisplay').innerHTML = parseFloat(this.value).toFixed(1)+' <span>% / yr</span>';
+  updateAll();
+});
+document.getElementById('taxSlider').addEventListener('input', function() {
+  document.getElementById('taxDisplay').innerHTML = parseFloat(this.value).toFixed(1)+' <span>%</span>';
+  updateAll();
+});
+document.getElementById('bufferSlider').addEventListener('input', function() {
+  document.getElementById('bufferDisplay').innerHTML = parseInt(this.value)+' <span>%</span>';
+  updateAll();
+});
+
+function toggleScenario(key, btn) {
+  activeScenarios[key] = !activeScenarios[key];
+  btn.classList.toggle('active', activeScenarios[key]);
+  updateAll();
+}
+
+function updateAll() {
+  renderCards();
+  renderDepletionTracks();
+  renderSurvivalChart();
+  renderMainChart();
+  renderErosionChart();
+  renderTable();
+}
+
+updateAll();
+</script>
+</body>
+</html>
